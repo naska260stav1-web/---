@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4efe8">
+<title>Что мешает тебе быть счастливой?</title>
+<style>
+:root{--bg:#fff0f4;--paper:#fffafd;--ink:#49343d;--muted:#927b84;--line:#efd2dc;--accent:#c47793}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 22px 56px;min-height:100vh}
+header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:1px solid var(--line);padding:10px 0 28px}
+.brand{font:clamp(25px,5vw,36px)/1.1 Georgia,serif}
+.tag{font-size:11px;letter-spacing:.18em;color:var(--muted);margin-top:10px;text-transform:uppercase;max-width:250px;line-height:1.6}
+.count{font-size:12px;letter-spacing:.12em;color:var(--muted);text-align:right;line-height:1.6}
+.progress-wrap{margin:28px 0 44px}
+.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.track{height:7px;background:#e4dbd2;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .25s}
+.eyebrow{font-size:13px;letter-spacing:.2em;font-weight:bold;color:var(--accent);text-transform:uppercase;margin-bottom:26px}
+h1{font:clamp(39px,8vw,64px)/1.12 Georgia,serif;font-weight:normal;margin:0 0 22px;letter-spacing:-.035em}
+.lead{font:18px/1.65 Arial,sans-serif;color:#766b63;max-width:620px;margin:0 0 34px}
+.question{font:clamp(29px,6vw,43px)/1.2 Georgia,serif;font-weight:normal;margin:0 0 30px}
+.answers{display:grid;gap:13px}
+.answer{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 22px;text-align:left;color:var(--ink);font:18px/1.45 Arial,sans-serif;cursor:pointer;transition:.18s;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.answer:after{content:"›";font-size:28px;color:#93877d}
+.answer:hover,.answer:focus{border-color:var(--accent);transform:translateY(-1px);outline:none}
+.actions{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:14px}
+button.primary{background:var(--accent);color:white;border:0;border-radius:99px;padding:15px 24px;font-size:15px;cursor:pointer}
+button.ghost{background:transparent;color:var(--muted);border:0;padding:12px 0;font-size:14px;cursor:pointer}
+button:disabled{opacity:.35;cursor:default}
+.result-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(24px,5vw,42px);margin-top:28px}
+.result-kicker{font-size:12px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+.result-title{font:clamp(34px,7vw,52px)/1.12 Georgia,serif;margin:16px 0}
+.result-card p{font-size:17px;line-height:1.75;color:#675c54}
+.result-card h3{font:25px Georgia,serif;font-weight:normal;margin:28px 0 8px}
+.note{font-size:13px!important;color:var(--muted)!important;border-top:1px solid var(--line);padding-top:20px;margin-top:28px}
+.start-actions{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:480px){main{padding:20px 18px 42px}header{padding-bottom:22px}.answer{font-size:16px;padding:18px}.lead{font-size:16px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div><div class="brand">Выбирать себя — это практика</div><div class="tag">Небольшое путешествие к себе</div></div>
+  <div class="count">ТЕСТ<br>10 ВОПРОСОВ</div>
+</header>
+<section id="app">
+  <div class="progress-wrap"><div class="progress-label"><span id="stepLabel">ПУТЬ К СЕБЕ</span><span id="stepCount">0 / 10</span></div><div class="track"><div class="fill" id="progress"></div></div></div>
+  <div id="content">
+    <div class="eyebrow">ТЕСТ ДЛЯ САМОПОЗНАНИЯ</div>
+    <h1>Что мешает тебе быть счастливой?</h1>
+    <p class="lead">Иногда счастью мешают не обстоятельства, а привычные способы думать, чувствовать и обращаться с собой. Ответь на 10 вопросов — в конце ты увидишь, какая внутренняя привычка сейчас может забирать больше всего сил.</p>
+    <div class="start-actions"><button class="primary" id="start">Начать тест</button></div>
+    <p class="note">Это бережный инструмент для саморефлексии, а не психологическая диагностика. Здесь нет правильных или неправильных ответов.</p>
+  </div>
+</section>
+<footer style="text-align:center;margin:44px 0 8px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font:13px/1.5 Arial,sans-serif;letter-spacing:.08em">Автор: <strong style="color:var(--ink);font-weight:600">Александра Ветрова</strong></footer>
+</main>
+<script>
+const questions = [
+ {q:"Когда близкий человек недоволен твоим решением, ты чаще…",a:[
+ ["Чувствую вину и начинаю сомневаться в себе","approval"],
+ ["Пытаюсь всё исправить и взять ситуацию под контроль","control"],
+ ["Думаю, что, возможно, лучше было не менять привычный порядок","fear"],
+ ["Откладываю свои чувства и занимаюсь тем, что нужно другим","neglect"]]},
+ {q:"Если у тебя появляется свободный вечер, ты…",a:[
+ ["Могу переживать, что кому-то нужна моя помощь","neglect"],
+ ["Составляю список полезных дел — просто отдыхать непривычно","control"],
+ ["Стараюсь провести его так, чтобы никого не разочаровать","approval"],
+ ["Не сразу понимаю, чего самой хочется","fear"]]},
+ {q:"Что сильнее всего выбивает тебя из равновесия?",a:[
+ ["Критика и неодобрение","approval"],
+ ["Неопределённость и ощущение, что всё идёт не по плану","control"],
+ ["Необходимость сделать большой шаг в неизвестность","fear"],
+ ["Когда от меня слишком многого ждут","neglect"]]},
+ {q:"Когда ты ошибаешься, твоя первая реакция…",a:[
+ ["Долго прокручиваю, что обо мне теперь подумают","approval"],
+ ["Злюсь на себя и пытаюсь срочно всё исправить","control"],
+ ["Боюсь повторить ошибку и поэтому медлю со следующим шагом","fear"],
+ ["Стараюсь не показывать, что мне тяжело, и идти дальше","neglect"]]},
+ {q:"Насколько легко тебе сказать «нет»?",a:[
+ ["Трудно: боюсь обидеть или разочаровать","approval"],
+ ["Могу, но потом переживаю, что всё вышло неидеально","control"],
+ ["Трудно, если не уверена, что последствия будут безопасными","fear"],
+ ["Часто соглашаюсь, даже когда у самой нет сил","neglect"]]},
+ {q:"О чём ты чаще всего думаешь перед важным решением?",a:[
+ ["Как это воспримут близкие","approval"],
+ ["Как предусмотреть все детали и не допустить ошибки","control"],
+ ["А вдруг перемены окажутся хуже, чем сейчас","fear"],
+ ["Как сделать так, чтобы всем было удобно","neglect"]]},
+ {q:"Что ты обычно делаешь, когда устаёшь?",a:[
+ ["Продолжаю, потому что неудобно подвести других","neglect"],
+ ["Пытаюсь собраться и выполнить всё по плану","control"],
+ ["Откладываю перемены и остаюсь в знакомом ритме, даже если он не подходит","fear"],
+ ["Скрываю усталость, чтобы не показаться слабой","approval"]]},
+ {q:"Какая мысль тебе знакомее всего?",a:[
+ ["«Мне важно, чтобы мной были довольны»","approval"],
+ ["«Я должна справляться лучше»","control"],
+ ["«Сейчас не время рисковать»","fear"],
+ ["«Сначала все остальные, потом я»","neglect"]]},
+ {q:"Представь, что никто не будет тебя оценивать. Что изменилось бы?",a:[
+ ["Я чаще выражала бы своё мнение и желания","approval"],
+ ["Я позволяла бы себе делать неидеально","control"],
+ ["Решилась бы на то, что давно откладываю","fear"],
+ ["Выделяла бы больше времени и внимания себе","neglect"]]},
+ {q:"Какой маленький шаг сейчас был бы для тебя самым непривычным?",a:[
+ ["Не оправдываться за свой выбор","approval"],
+ ["Оставить что-то незавершённым и отдохнуть","control"],
+ ["Попробовать новое, не имея гарантий","fear"],
+ ["Попросить о помощи или выбрать себя без чувства долга","neglect"]]}
+];
+const profiles = {
+ approval:{title:"Ты слишком зависишь от чужой оценки",intro:"Похоже, тебе важно сохранять близость и не разочаровывать людей. Иногда ради этого ты можешь отодвигать собственное мнение, смягчать желания или сомневаться в решениях, которые на самом деле тебе подходят.",why:"Когда одобрение становится главным ориентиром, собственный голос звучит тише. Тогда даже хороший выбор может сопровождаться тревогой и чувством вины.",step:"В следующий раз, прежде чем согласиться или объясняться, сделай паузу и спроси себя: «Чего хочу я, если на минуту не учитывать чужую реакцию?»"},
+ control:{title:"Ты требуешь от себя слишком многого",intro:"Похоже, ты привыкла держать многое под контролем и рассчитывать прежде всего на себя. Ответственность помогает тебе справляться, но иногда превращается в постоянное внутреннее напряжение.",why:"Стремление всё предусмотреть и сделать идеально может лишать лёгкости. Отдых начинает казаться наградой, которую ещё нужно заслужить.",step:"Выбери одно небольшое дело и сознательно сделай его просто достаточно хорошо. Разреши себе остановиться, даже если можно было бы улучшить ещё немного."},
+ fear:{title:"Тебя может удерживать страх перемен",intro:"Похоже, тебе важно чувствовать опору и понимать, что будет дальше. Поэтому знакомое, даже не вполне подходящее, иногда кажется безопаснее нового.",why:"Ожидание полной уверенности может надолго откладывать желания и решения. Но ясность часто появляется не до первого шага, а постепенно — по мере движения.",step:"Не требуй от себя решительного переворота. Выбери один маленький, обратимый шаг в сторону того, чего давно хочется."},
+ neglect:{title:"Ты часто оставляешь себя напоследок",intro:"Похоже, ты умеешь заботиться о других и замечать их потребности. Но собственные желания и усталость могут оказываться в конце списка — особенно когда кто-то рассчитывает на тебя.",why:"Если постоянно расходовать силы, не пополняя их, постепенно становится труднее чувствовать радость и понимать, чего хочется именно тебе.",step:"Запланируй небольшой отрезок времени только для себя и отнесись к нему как к важной договорённости. Не нужно сначала заслужить отдых."}
+};
+let index=0, scores={approval:0,control:0,fear:0,neglect:0}, chosen=[];
+const content=document.getElementById('content'), progress=document.getElementById('progress'), stepCount=document.getElementById('stepCount'), stepLabel=document.getElementById('stepLabel');
+function updateProgress(){progress.style.width=(index/questions.length*100)+'%';stepCount.textContent=index+' / '+questions.length;stepLabel.textContent='ЧАСТЬ 1 · ПРИВЫЧНЫЕ РЕАКЦИИ'}
+function renderQuestion(){
+ updateProgress(); const item=questions[index];
+ content.innerHTML=`<div class="eyebrow">ВОПРОС ${index+1}</div><h2 class="question">${item.q}</h2><div class="answers">${item.a.map((a,i)=>`<button class="answer" data-i="${i}">${a[0]}</button>`).join('')}</div><div class="actions"><button class="ghost" id="back" ${index===0?'disabled':''}>← Назад</button><span style="font-size:12px;color:var(--muted)">${index+1} ИЗ ${questions.length}</span></div>`;
+ content.querySelectorAll('.answer').forEach(b=>b.addEventListener('click',()=>selectAnswer(+b.dataset.i)));
+ document.getElementById('back').addEventListener('click',goBack);
+}
+function selectAnswer(i){const key=questions[index].a[i][1];chosen[index]=key;scores[key]++;index++;if(index<questions.length)renderQuestion();else showResult();}
+function goBack(){if(index===0)return;index--;scores[chosen[index]]--;renderQuestion();}
+function showResult(){
+ progress.style.width='100%';stepCount.textContent='10 / 10';stepLabel.textContent='ТВОЙ РЕЗУЛЬТАТ';
+ const max=Math.max(...Object.values(scores));const winners=Object.keys(scores).filter(k=>scores[k]===max);
+ const key=winners[0],p=profiles[key];
+ const labels={approval:'чужая оценка',control:'стремление всё контролировать',fear:'страх перемен',neglect:'привычка забывать о себе'};
+ content.innerHTML=`<div class="eyebrow">ТВОЙ РЕЗУЛЬТАТ</div><h1>Что сейчас мешает тебе быть счастливой?</h1><div class="result-card"><div class="result-kicker">ТВОЯ ВЕДУЩАЯ ТЕМА</div><div class="result-title">${p.title}</div><p>${p.intro}</p><h3>Что может происходить внутри</h3><p>${p.why}</p><h3>С чего можно начать</h3><p>${p.step}</p><p class="note">Результат показывает только наиболее частую тему среди твоих ответов. Это не диагноз и не характеристика всей твоей личности. Если несколько тем набрали одинаковое количество баллов, результат отражает одну из них — возможно, тебе откликнутся и другие описания.</p></div><div class="actions"><button class="ghost" id="restart">Пройти ещё раз</button><button class="primary" id="share">Поделиться</button></div>`;
+ document.getElementById('restart').addEventListener('click',()=>{index=0;scores={approval:0,control:0,fear:0,neglect:0};chosen=[];renderQuestion();});
+ document.getElementById('share').addEventListener('click',async()=>{const text='Я прошла тест «Что мешает тебе быть счастливой?» — '+p.title;try{if(navigator.share)await navigator.share({title:'Мой результат теста',text,url:location.href});else if(navigator.clipboard){await navigator.clipboard.writeText(text+' '+location.href);alert('Текст результата скопирован.');}else alert(text);}catch(e){}});
+}
+document.getElementById('start').addEventListener('click',()=>{index=0;renderQuestion();});
+</script>
+</body>
+</html>
